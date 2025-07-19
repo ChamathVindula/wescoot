@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       Scooter.belongsTo(models.Category, { foreignKey: 'category_id' });
       Scooter.belongsTo(models.SafetyInfo, { foreignKey: 'safety_info_id' });
       Scooter.hasMany(models.Discount, { foreignKey: 'scooter_id' });
-      Scooter.hasMany(models.OrderItem, { foreignKey: 'scooter_id' });  // Have to alter this relationship
+      Scooter.belongsToMany(models.Order, {
+        through: models.OrderItem,
+        foreignKey: "scooter_id",
+        otherKey: "order_id",
+        as: "Orders",
+      });
     }
   }
   Scooter.init({
