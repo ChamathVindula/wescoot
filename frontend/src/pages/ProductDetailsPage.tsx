@@ -10,15 +10,19 @@ const ProductDetailsPage: React.FC = () => {
   if (error) return <div>Error loading product details.</div>;
   if (!scooter) return <div>Product not found.</div>;
 
+  const imageName = scooter.name.replace(/\s+/g, '-');
+  const categoryPath = scooter.category.name.toLowerCase() === 'electric bike' ? 'bikes' : 'scooters';
+  const imageUrl = `/${categoryPath}/${imageName}.webp`;
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <img src={scooter.imageUrl} alt={scooter.name} className="w-full rounded-lg shadow-lg" />
+          <img src={imageUrl} alt={scooter.name} className="w-full rounded-lg shadow-lg" />
         </div>
         <div>
           <h1 className="text-4xl font-bold mb-4">{scooter.name}</h1>
-          <p className="text-xl text-gray-600 mb-4">{scooter.brand} - {scooter.model}</p>
+          <p className="text-xl text-gray-600 mb-4">{scooter.brand}</p>
           <p className="text-3xl font-semibold mb-4">${scooter.price}</p>
           {scooter.discount && (
             <p className="text-xl text-red-500 line-through mb-4">

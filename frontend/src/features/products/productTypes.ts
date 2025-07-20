@@ -31,7 +31,7 @@ export interface Scooter {
   imageUrl: string;
   stock: number;
   categoryId: number;
-  category?: Category;
+  category: Category;
   safetyInfo?: SafetyInfo;
   discount?: Discount;
 }
