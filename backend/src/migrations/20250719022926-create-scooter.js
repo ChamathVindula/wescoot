@@ -70,6 +70,11 @@ module.exports = {
           key: 'id'
         }
       },
+      stock: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

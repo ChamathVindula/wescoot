@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import type { Scooter } from '../features/products/productTypes';
 
 interface ProductCardProps {
@@ -12,21 +12,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ scooter }) => {
   const imageUrl = `/${categoryPath}/${imageName}.webp`;
 
   return (
-    <div className="border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
-      <Link to={`/scooters/${scooter.id}`}>
-        <img src={imageUrl} alt={scooter.name} className="w-full h-48 object-cover rounded-t-lg" />
-        <div className="p-4">
-          <h2 className="text-xl font-bold">{scooter.name}</h2>
-          <p className="text-gray-600">{scooter.brand}</p>
-          <p className="text-lg font-semibold mt-2">${scooter.price}</p>
+    <Link to={`/scooters/${scooter.id}`} className="group block overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
+      <div className="relative">
+        <img 
+          src={imageUrl} 
+          alt={scooter.name} 
+          className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4 bg-white">
+        <p className="text-sm text-gray-500 mb-1">{scooter.brand}</p>
+        <h2 className="text-lg font-semibold text-gray-800 truncate">{scooter.name}</h2>
+        <div className="mt-2 flex items-baseline">
+          <p className="text-xl font-bold text-gray-900">${scooter.price}</p>
           {scooter.discount && (
-            <p className="text-red-500 line-through">
+            <p className="ml-2 text-sm text-red-500 line-through">
               ${(scooter.price / (1 - scooter.discount.percentage / 100)).toFixed(2)}
             </p>
           )}
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 

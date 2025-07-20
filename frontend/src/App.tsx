@@ -1,10 +1,9 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
-import MainLayout from './layouts/MainLayout';
+import HomePage from './pages/HomePage';
 import './App.css';
 
 const router = createBrowserRouter([
@@ -12,28 +11,16 @@ const router = createBrowserRouter([
 		path: '/',
 		element: <MainLayout />,
 		children: [
-			{
-				index: true,
-				element: <ProductListPage />,
-			},
-			{
-				path: 'scooters',
-				element: <ProductListPage />,
-			},
-			{
-				path: 'scooters/:id',
-				element: <ProductDetailsPage />,
-			},
+			{ index: true, element: <HomePage /> },
+			{ path: 'products', element: <ProductListPage /> },
+			{ path: 'scooters/:id', element: <ProductDetailsPage /> },
+			// Add other routes here, e.g., about, contact, cart
 		],
 	},
 ]);
 
-function App() {
-	return (
-		<Provider store={store}>
-			<RouterProvider router={router} />
-		</Provider>
-	);
-}
+const App: React.FC = () => {
+	return <RouterProvider router={router} />;
+};
 
 export default App;

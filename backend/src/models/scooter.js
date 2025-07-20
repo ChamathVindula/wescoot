@@ -58,7 +58,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     category_id: DataTypes.INTEGER,
-    safety_info_id: DataTypes.INTEGER
+    safety_info_id: DataTypes.INTEGER,
+    stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
   }, {
     sequelize,
     modelName: 'Scooter',
