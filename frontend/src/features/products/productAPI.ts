@@ -25,7 +25,7 @@ interface GetScootersQuery {
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
-  tagTypes: ['Scooter'],
+  tagTypes: ['Scooter', 'Brands'],
   endpoints: (builder) => ({
     getScooters: builder.query<GetScootersResponse, GetScootersQuery>({
       query: (params) => ({
@@ -40,11 +40,15 @@ export const productApi = createApi({
             ]
           : [{ type: 'Scooter', id: 'LIST' }],
     }),
-    getScooterById: builder.query<Scooter, number>({
+    getScooterById: builder.query<Scooter, string>({
       query: (id) => `scooters/${id}`,
       providesTags: (result, error, id) => [{ type: 'Scooter', id }],
+    }),
+    getScooterBrands: builder.query<string[], void>({
+      query: () => 'scooters/brands',
+      providesTags: ['Brands'],
     }),
   }),
 });
 
-export const { useGetScootersQuery, useGetScooterByIdQuery } = productApi;
+export const { useGetScootersQuery, useGetScooterByIdQuery, useGetScooterBrandsQuery } = productApi;

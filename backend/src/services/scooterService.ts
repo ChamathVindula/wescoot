@@ -87,3 +87,12 @@ export const getScooterById = async (id: number): Promise<ScooterInstance> => {
   }
   return scooter;
 };
+
+export const getScooterBrands = async (): Promise<string[]> => {
+  const brands = await Scooter.findAll({
+    attributes: ['brand'],
+    group: ['brand'],
+    order: [['brand', 'ASC']],
+  });
+  return brands.map((item: { brand: string }) => item.brand);
+};

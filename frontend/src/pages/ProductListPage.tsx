@@ -1,5 +1,8 @@
 import React, { useMemo } from 'react';
-import { useGetScootersQuery } from '../features/products/productAPI';
+import {
+  useGetScootersQuery,
+  useGetScooterBrandsQuery,
+} from '../features/products/productAPI';
 import ProductCard from '../components/ProductCard';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
@@ -19,6 +22,11 @@ const ProductListPage: React.FC = () => {
   }), [searchParams]);
 
   const { data, error, isLoading } = useGetScootersQuery(filters);
+  const {
+    data: brands,
+    isLoading: isLoadingBrands,
+    error: errorBrands,
+  } = useGetScooterBrandsQuery();
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -48,15 +56,25 @@ const ProductListPage: React.FC = () => {
           <div className="space-y-6">
             <div>
               <label htmlFor="brand" className="block text-sm font-medium text-gray-700">Brand</label>
-              <input
-                type="text"
+              <select
                 name="brand"
                 id="brand"
                 value={filters.brand}
                 onChange={handleFilterChange}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                placeholder="e.g., Segway"
-              />
+                disabled={isLoadingBrands}
+              >
+                <option value="">All Brands</option>
+                {errorBrands ? (
+                  <option disabled>Error loading brands</option>
+                ) : (
+                  brands?.map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))
+                )}
+              </select>
             </div>
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
@@ -81,7 +99,7 @@ const ProductListPage: React.FC = () => {
       <main className="w-full lg:w-3/4 xl:w-4/5">
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-600">
-            Showing {data?.scooters.length || 0} of {data?.total || 0} results
+            Showing {data?.scooters.length || 0} of {data?.totalItems || 0} results
           </p>
           <div className="relative">
             <select

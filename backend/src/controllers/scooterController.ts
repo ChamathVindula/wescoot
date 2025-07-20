@@ -19,3 +19,12 @@ export const getScooterById = async (req: Request, res: Response, next: NextFunc
     next(error);
   }
 };
+
+export const getScooterBrands = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const brands = await scooterService.getScooterBrands();
+    res.json(brands);
+  } catch (error) {
+    next(error);
+  }
+};

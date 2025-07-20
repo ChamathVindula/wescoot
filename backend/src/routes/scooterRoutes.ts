@@ -12,6 +12,44 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /scooters/brands:
+ *   get:
+ *     summary: Retrieve a list of unique scooter brands
+ *     tags: [Scooters]
+ *     responses:
+ *       200:
+ *         description: A list of scooter brands.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
+router.get('/brands', scooterController.getScooterBrands);
+
+/**
+ * @swagger
+ * /scooters/{id}:
+ *   get:
+ *     summary: Retrieve a single scooter by ID
+ *     tags: [Scooters]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A single scooter.
+ *       404:
+ *         description: Scooter not found.
+ */
+router.get('/:id', scooterController.getScooterById);
+
+/**
+ * @swagger
  * /scooters:
  *   get:
  *     summary: Retrieve a list of scooters
@@ -69,25 +107,5 @@ const router = express.Router();
  *         description: A list of scooters.
  */
 router.get('/', scooterController.getAllScooters);
-
-/**
- * @swagger
- * /scooters/{id}:
- *   get:
- *     summary: Retrieve a single scooter by ID
- *     tags: [Scooters]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A single scooter.
- *       404:
- *         description: Scooter not found.
- */
-router.get('/:id', scooterController.getScooterById);
 
 export default router;
