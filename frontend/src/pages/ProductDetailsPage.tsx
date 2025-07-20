@@ -1,10 +1,14 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useGetScooterByIdQuery } from '../features/products/productAPI';
+import { addItem } from '../features/cart/cartSlice';
+import type { AppDispatch } from '../app/store';
 import { ShieldCheck, Zap, ArrowRight, Gauge, Weight, ShoppingCart } from 'lucide-react';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const dispatch: AppDispatch = useDispatch();
   const { data: scooter, error, isLoading } = useGetScooterByIdQuery(Number(id));
 
   if (isLoading) return <div className="text-center py-20">Loading...</div>;
@@ -14,6 +18,17 @@ const ProductDetailsPage: React.FC = () => {
   const imageName = scooter.name.replace(/\s+/g, '-');
   const categoryPath = scooter.category.name.toLowerCase() === 'electric bike' ? 'bikes' : 'scooters';
   const imageUrl = `/${categoryPath}/${imageName}.webp`;
+
+  const handleAddToCart = () => {
+    if (scooter) {
+      dispatch(addItem({
+        id: scooter.id,
+        name: scooter.name,
+        price: scooter.price,
+        image: imageUrl,
+      }));
+    }
+  };
 
   const specs = [
     { icon: <Zap className="w-6 h-6 text-indigo-500" />, label: 'Motor', value: scooter.motor },
@@ -68,7 +83,9 @@ const ProductDetailsPage: React.FC = () => {
 
           {/* Add to Cart */}
           <div className="mt-8">
-            <button className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-transform transform hover:scale-105 disabled:bg-gray-400"
+            <button 
+              onClick={handleAddToCart}
+              className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-transform transform hover:scale-105 disabled:bg-gray-400"
               disabled={scooter.stock <= 0}
             >
               <ShoppingCart className="w-6 h-6" />
