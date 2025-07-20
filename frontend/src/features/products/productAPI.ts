@@ -6,7 +6,7 @@ interface GetScootersResponse {
   totalPages: number;
   currentPage: number;
   scooters: Scooter[];
-  total: number; // Add the total property to represent the total number of scooters
+  limit: number;
 }
 
 interface GetScootersQuery {

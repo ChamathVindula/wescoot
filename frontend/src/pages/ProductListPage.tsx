@@ -1,57 +1,39 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useGetScootersQuery } from '../features/products/productAPI';
 import ProductCard from '../components/ProductCard';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
+import Pagination from '../components/Pagination';
 
 const ProductListPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState({
+  // The URL is the single source of truth
+  const filters = useMemo(() => ({
     page: Number(searchParams.get('page')) || 1,
     limit: Number(searchParams.get('limit')) || 12,
     sortBy: searchParams.get('sortBy') || 'createdAt',
     order: (searchParams.get('order') || 'DESC') as 'ASC' | 'DESC',
     brand: searchParams.get('brand') || '',
     category: searchParams.get('category') || '',
-    // Add other filters from your state if needed
-  });
+  }), [searchParams]);
 
-  const debouncedFilters = useMemo(() => {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, String(value));
-      }
-    });
-    setSearchParams(params);
-    return filters;
-  }, [filters, setSearchParams]);
+  const { data, error, isLoading } = useGetScootersQuery(filters);
 
-  const { data, error, isLoading } = useGetScootersQuery(debouncedFilters);
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-      page: 1, 
-    }));
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set(name, value);
+    newParams.set('page', '1'); // Reset to first page on filter change
+    setSearchParams(newParams);
   };
 
   const handlePageChange = (newPage: number) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      page: newPage,
-    }));
-  setSearchParams(
-      Object.fromEntries(
-        Object.entries({ ...filters, page: newPage.toString() }).map(([key, value]) => [
-          key,
-          value?.toString() || '',
-        ])
-      )
-    );
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('page', String(newPage));
+    setSearchParams(newParams);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -127,31 +109,13 @@ const ProductListPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-8 space-x-2">
-          <button 
-            onClick={() => handlePageChange(filters.page - 1)} 
-            disabled={filters.page <= 1}
-            className="px-4 py-2 border rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          {Array.from({ length: Math.ceil((data?.total || 0) / filters.limit) }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={`px-4 py-2 border rounded-md text-sm font-medium ${page === filters.page ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-            >
-              {page}
-            </button>
-          ))}
-          <button 
-            onClick={() => handlePageChange(filters.page + 1)} 
-            disabled={filters.page >= Math.ceil((data?.total || 0) / filters.limit)}
-            className="px-4 py-2 border rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        {data && data.totalItems > 0 && (
+          <Pagination
+            currentPage={filters.page}
+            totalPages={Math.ceil(data.totalItems / filters.limit)}
+            onPageChange={handlePageChange}
+          />
+        )}
       </main>
     </div>
   );

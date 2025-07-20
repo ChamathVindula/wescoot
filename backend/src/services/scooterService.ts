@@ -20,6 +20,7 @@ interface GetScootersResult {
   totalPages: number;
   currentPage: number;
   scooters: ScooterInstance[];
+  limit: number;
 }
 
 export const getScooters = async (params: GetScootersParams): Promise<GetScootersResult> => {
@@ -69,6 +70,7 @@ export const getScooters = async (params: GetScootersParams): Promise<GetScooter
     totalPages: Math.ceil(count / limit),
     currentPage: page,
     scooters: rows,
+    limit: limit,
   };
 };
 
