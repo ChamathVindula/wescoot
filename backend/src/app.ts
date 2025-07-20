@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import scooterRoutes from './routes/scooterRoutes';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+app.use(cors());
 app.use(express.json());
 app.use('/api/scooters', scooterRoutes);
 

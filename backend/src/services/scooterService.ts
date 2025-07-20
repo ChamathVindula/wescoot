@@ -23,7 +23,9 @@ interface GetScootersResult {
 }
 
 export const getScooters = async (params: GetScootersParams): Promise<GetScootersResult> => {
-  const { page = 1, limit = 10, sortBy, order, ...filters } = params;
+  const page = params.page ? parseInt(String(params.page), 10) : 1;
+  const limit = params.limit ? parseInt(String(params.limit), 10) : 10;
+  const { sortBy, order, ...filters } = params;
   const offset = (page - 1) * limit;
   const where: any = {};
 

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       Scooter.hasMany(models.Discount, { 
         sourceKey: 'id',
         foreignKey: 'scooter_id',
-        as: 'discounts'
+        as: 'discount'
         
       });
       Scooter.belongsToMany(models.Order, {
