@@ -7,9 +7,10 @@ import { CreditCard, Lock } from 'lucide-react';
 
 const paymentSchema = z.object({
   cardNumber: z.string()
-    .min(13, 'Card number must be at least 13 digits')
-    .max(19, 'Card number must be at most 19 digits')
-    .regex(/^\d+$/, 'Card number must contain only digits'),
+    .min(1, 'Card number is required')
+    .transform((val) => val.replace(/\s/g, '')) // Remove spaces before validation
+    .refine((val) => val.length >= 13 && val.length <= 19, 'Card number must be between 13 and 19 digits')
+    .refine((val) => /^\d+$/.test(val), 'Card number must contain only digits'),
   expiryMonth: z.string()
     .regex(/^(0[1-9]|1[0-2])$/, 'Month must be between 01 and 12'),
   expiryYear: z.string()
@@ -19,7 +20,10 @@ const paymentSchema = z.object({
     .min(3, 'CVC must be at least 3 digits')
     .max(4, 'CVC must be at most 4 digits')
     .regex(/^\d+$/, 'CVC must contain only digits'),
-  cardholderName: z.string().min(2, 'Cardholder name must be at least 2 characters'),
+  cardholderName: z.string()
+    .min(1, 'Cardholder name is required')
+    .min(2, 'Cardholder name must be at least 2 characters')
+    .trim(), // Remove leading/trailing whitespace
 });
 
 interface PaymentFormProps {
@@ -32,12 +36,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, isProcessing = fals
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<PaymentFormData>({
     resolver: zodResolver(paymentSchema),
   });
-
-  const cardNumber = watch('cardNumber');
 
   // Format card number with spaces
   const formatCardNumber = (value: string) => {
