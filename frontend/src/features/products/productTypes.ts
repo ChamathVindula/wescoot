@@ -23,9 +23,9 @@ export interface Scooter {
   brand: string;
   model: string;
   price: number;
-  motor: string;
-  maxSpeed: number;
-  maxRange: number;
+  motor_type: string;
+  max_speed: number;
+  max_range: number;
   weight: number;
   description: string;
   imageUrl: string;

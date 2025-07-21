@@ -9,7 +9,7 @@ import { ShieldCheck, Zap, ArrowRight, Gauge, Weight, ShoppingCart } from 'lucid
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch: AppDispatch = useDispatch();
-  const { data: scooter, error, isLoading } = useGetScooterByIdQuery(Number(id));
+  const { data: scooter, error, isLoading } = useGetScooterByIdQuery(id!);
 
   if (isLoading) return <div className="text-center py-20">Loading...</div>;
   if (error) return <div className="text-center py-20 text-red-500">Error loading product details.</div>;
@@ -31,9 +31,9 @@ const ProductDetailsPage: React.FC = () => {
   };
 
   const specs = [
-    { icon: <Zap className="w-6 h-6 text-indigo-500" />, label: 'Motor', value: scooter.motor },
-    { icon: <Gauge className="w-6 h-6 text-indigo-500" />, label: 'Max Speed', value: `${scooter.maxSpeed} km/h` },
-    { icon: <ArrowRight className="w-6 h-6 text-indigo-500" />, label: 'Max Range', value: `${scooter.maxRange} km` },
+    { icon: <Zap className="w-6 h-6 text-indigo-500" />, label: 'Motor', value: scooter.motor_type },
+    { icon: <Gauge className="w-6 h-6 text-indigo-500" />, label: 'Max Speed', value: `${scooter.max_speed} km/h` },
+    { icon: <ArrowRight className="w-6 h-6 text-indigo-500" />, label: 'Max Range', value: `${scooter.max_range} km` },
     { icon: <Weight className="w-6 h-6 text-indigo-500" />, label: 'Weight', value: `${scooter.weight} kg` },
   ];
   console.log('sctr', scooter);
