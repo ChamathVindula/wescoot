@@ -28,11 +28,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ scooter }) => {
   return (
     <div className="group block overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col">
       <Link to={`/scooters/${scooter.id}`} className="block">
-        <div className="relative">
+        <div className="relative h-64 bg-white">
           <img 
             src={imageUrl} 
             alt={scooter.name} 
-            className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </div>
         <div className="p-4 bg-white">
